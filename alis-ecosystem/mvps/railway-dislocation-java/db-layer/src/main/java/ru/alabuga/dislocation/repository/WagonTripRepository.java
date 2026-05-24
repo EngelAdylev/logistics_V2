@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import ru.alabuga.dislocation.model.TripStatus;
 import ru.alabuga.dislocation.model.WagonTrip;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,13 +19,15 @@ public interface WagonTripRepository
         SELECT t FROM WagonTrip t
         WHERE t.wagon.id = :wagonId
           AND t.depStationCode = :depStationCode
-          AND CAST(t.startedAt AS LocalDate) = :flightDate
+          AND t.startedAt >= :startOfDay
+          AND t.startedAt < :startOfNextDay
           AND t.status = :status
         """)
     Optional<WagonTrip> findActiveTrip(
             @Param("wagonId") UUID wagonId,
             @Param("depStationCode") String depStationCode,
-            @Param("flightDate") LocalDate flightDate,
+            @Param("startOfDay") Instant startOfDay,
+            @Param("startOfNextDay") Instant startOfNextDay,
             @Param("status") TripStatus status
     );
 }
