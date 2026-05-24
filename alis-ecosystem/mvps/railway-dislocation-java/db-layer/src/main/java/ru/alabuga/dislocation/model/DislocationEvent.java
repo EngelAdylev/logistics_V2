@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 import java.util.List;
@@ -11,12 +13,21 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "dislocation_event", schema = "dislocation")
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DislocationEvent extends AbstractBaseEntity {
+public class DislocationEvent {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @CreatedDate
+    @Column(updatable = false)
+    private Instant createdAt;
 
     @Column(unique = true, nullable = false)
     private UUID rzdId;
