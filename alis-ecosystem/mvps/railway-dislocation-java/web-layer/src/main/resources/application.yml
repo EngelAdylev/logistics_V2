@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: railway-dislocation
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/alis}
+    username: ${DATABASE_USERNAME:alis}
+    password: ${DATABASE_PASSWORD:alis}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_schema: dislocation
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    default-schema: dislocation
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8080/realms/KIS}
+
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /api
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

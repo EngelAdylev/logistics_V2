@@ -1,0 +1,196 @@
+[versions]
+# Spring Boot
+spring-boot = "3.3.0"
+spring-dependency-management = "1.1.5"
+
+# Java
+java = "17"
+
+# Lombok
+lombok = "1.18.24"
+
+# QueryDSL
+querydsl = "5.1.0"
+querydsl-apt = "5.1.0"
+
+# MapStruct
+mapstruct = "1.5.3.Final"
+
+# Jackson
+jackson-core = "2.19.2"
+jackson-databind = "2.15.2"
+jackson-annotations = "2.15.2"
+
+# Liquibase
+liquibase = "4.27.0"
+
+# PostgreSQL
+postgresql = "42.7.3"
+
+# Testcontainers
+testcontainers = "2.0.2"
+
+# SpringDoc OpenAPI
+springdoc-openapi = "2.5.0"
+
+# Hibernate Validator
+hibernate-validator = "8.0.0.Final"
+
+# Micrometer
+micrometer-prometheus = "1.13.0"
+
+# Apache POI
+poi-ooxml = "5.2.5"
+
+# JasperReports
+jasperreports = "6.20.6"
+jasperreports-fonts = "6.20.6"
+
+# JXLS
+jxls-poi = "3.0.0"
+
+# Logging
+logstash-logback-encoder = "7.3"
+janino = "3.1.9"
+
+# PDF
+pdfbox = "3.0.3"
+
+# Keycloak
+keycloak-admin-client = "26.0.1"
+
+# Testcontainers Keycloak
+testcontainers-keycloak = "4.0.0"
+
+# JUnit
+junit = "4.13.1"
+
+# Gradle Plugins
+sonarqube = "5.0.0.4638"
+gradle-git-properties = "2.4.0"
+
+# Jacoco (для toolVersion, не для плагина)
+jacoco = "0.8.8"
+
+# автоформатирование кода
+spotless = "8.0.0"
+
+# Jakarta
+jakarta-persistence = "3.1.0"
+jakarta-validation = "3.0.2"
+
+# Apache Commons
+commons-lang3 = "3.14.0"
+commons-collections4 = "4.5.0-M1"
+
+[libraries]
+# Spring Boot Starters
+spring-boot-starter-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa", version.ref = "spring-boot" }
+spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring-boot" }
+spring-boot-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux", version.ref = "spring-boot" }
+spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation", version.ref = "spring-boot" }
+spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security", version.ref = "spring-boot" }
+spring-boot-starter-oauth2-resource-server = { module = "org.springframework.boot:spring-boot-starter-oauth2-resource-server", version.ref = "spring-boot" }
+spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "spring-boot" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot" }
+spring-boot-configuration-processor = { module = "org.springframework.boot:spring-boot-configuration-processor", version.ref = "spring-boot" }
+
+# Spring
+spring-aop = { module = "org.springframework:spring-aop" }
+spring-security-core = { module = "org.springframework.security:spring-security-core" }
+spring-security-test = { module = "org.springframework.security:spring-security-test" }
+
+# Lombok
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+
+# QueryDSL
+querydsl-core = { module = "com.querydsl:querydsl-core", version.ref = "querydsl" }
+querydsl-jpa = { module = "com.querydsl:querydsl-jpa", version.ref = "querydsl" }
+
+# MapStruct
+mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "mapstruct" }
+mapstruct-processor = { module = "org.mapstruct:mapstruct-processor", version.ref = "mapstruct" }
+
+# Jackson
+jackson-core = { module = "com.fasterxml.jackson.core:jackson-core", version.ref = "jackson-core" }
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson-databind" }
+jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson-annotations" }
+
+# Liquibase
+liquibase-core = { module = "org.liquibase:liquibase-core", version.ref = "liquibase" }
+
+# PostgreSQL
+postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
+
+# Testcontainers
+testcontainers-junit-jupiter = { module = "org.testcontainers:testcontainers-junit-jupiter", version.ref = "testcontainers" }
+testcontainers-postgresql = { module = "org.testcontainers:testcontainers-postgresql", version.ref = "testcontainers" }
+testcontainers-testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
+testcontainers-keycloak = { module = "com.github.dasniko:testcontainers-keycloak", version.ref = "testcontainers-keycloak" }
+
+# SpringDoc OpenAPI
+springdoc-openapi-webmvc-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc-openapi" }
+
+# Hibernate Validator
+hibernate-validator = { module = "org.hibernate:hibernate-validator", version.ref = "hibernate-validator" }
+
+# Micrometer
+micrometer-registry-prometheus = { module = "io.micrometer:micrometer-registry-prometheus", version.ref = "micrometer-prometheus" }
+
+# Apache POI
+poi-ooxml = { module = "org.apache.poi:poi-ooxml", version.ref = "poi-ooxml" }
+
+# JasperReports
+jasperreports = { module = "net.sf.jasperreports:jasperreports", version.ref = "jasperreports" }
+jasperreports-fonts = { module = "net.sf.jasperreports:jasperreports-fonts", version.ref = "jasperreports-fonts" }
+
+# JXLS
+jxls-poi = { module = "org.jxls:jxls-poi", version.ref = "jxls-poi" }
+
+# Logging
+logstash-logback-encoder = { module = "net.logstash.logback:logstash-logback-encoder", version.ref = "logstash-logback-encoder" }
+janino = { module = "org.codehaus.janino:janino", version.ref = "janino" }
+
+# PDF
+pdfbox = { module = "org.apache.pdfbox:pdfbox", version.ref = "pdfbox" }
+
+# Keycloak
+keycloak-admin-client = { module = "org.keycloak:keycloak-admin-client", version.ref = "keycloak-admin-client" }
+
+# JUnit
+junit = { module = "junit:junit", version.ref = "junit" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+
+# Jakarta
+jakarta-persistence-api = { module = "jakarta.persistence:jakarta.persistence-api", version.ref = "jakarta-persistence" }
+jakarta-validation-api = { module = "jakarta.validation:jakarta.validation-api", version.ref = "jakarta-validation" }
+
+# Apache Commons
+commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commons-lang3" }
+commons-collections4 = { module = "org.apache.commons:commons-collections4", version.ref = "commons-collections4" }
+
+[bundles]
+# Spring Boot Web Bundle
+spring-boot-web = ["spring-boot-starter-web", "spring-boot-starter-webflux"]
+
+# Spring Boot Security Bundle
+spring-boot-security = ["spring-boot-starter-security", "spring-boot-starter-oauth2-resource-server"]
+
+# QueryDSL Bundle
+querydsl = ["querydsl-core", "querydsl-jpa"]
+
+# Jackson Bundle
+jackson = ["jackson-core", "jackson-databind", "jackson-annotations"]
+
+# Testcontainers Bundle
+testcontainers = ["testcontainers-postgresql", "testcontainers-testcontainers"]
+
+# MapStruct Bundle
+mapstruct = ["mapstruct", "mapstruct-processor"]
+
+[plugins]
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }
+sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
+gradle-git-properties = { id = "com.gorylenko.gradle-git-properties", version.ref = "gradle-git-properties" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless"}
