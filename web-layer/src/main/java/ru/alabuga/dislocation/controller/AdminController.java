@@ -5,6 +5,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.alabuga.dislocation.model.TripStatus;
+
+import com.opencsv.exceptions.CsvValidationException;
+
+import java.io.IOException;
 import ru.alabuga.dislocation.repository.DislocationEventRepository;
 import ru.alabuga.dislocation.repository.WagonRepository;
 import ru.alabuga.dislocation.repository.WagonTripRepository;
@@ -25,7 +30,7 @@ public class AdminController {
 
     @Operation(summary = "Загрузить справочник станций из CSV (формат: code,name,lat,lng)")
     @PostMapping(value = "/sync-stations", consumes = "multipart/form-data")
-    public Map<String, Object> syncStations(@RequestParam("file") MultipartFile file) throws Exception {
+    public Map<String, Object> syncStations(@RequestParam("file") MultipartFile file) throws IOException, CsvValidationException {
         int count = stationService.syncFromCsv(file);
         return Map.of("imported", count);
     }
@@ -35,7 +40,7 @@ public class AdminController {
     public Map<String, Long> stats() {
         return Map.of(
                 "wagons", wagonRepo.count(),
-                "activeTrips", tripRepo.count(),
+                "activeTrips", tripRepo.countByStatus(TripStatus.ACTIVE),
                 "events", eventRepo.count()
         );
     }

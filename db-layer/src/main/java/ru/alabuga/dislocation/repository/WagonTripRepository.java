@@ -30,4 +30,6 @@ public interface WagonTripRepository
             @Param("startOfNextDay") Instant startOfNextDay,
             @Param("status") TripStatus status
     );
+
+    long countByStatus(TripStatus status);
 }
