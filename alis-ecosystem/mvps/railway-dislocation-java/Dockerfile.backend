@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jre
+FROM --platform=linux/amd64 eclipse-temurin:17-jre-alpine
 WORKDIR /app
 COPY web-layer/build/libs/*.jar app.jar
 EXPOSE 8090
