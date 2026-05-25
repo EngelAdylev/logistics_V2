@@ -1,8 +1,8 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
+import MapPage from './pages/MapPage';
 
-// Stub pages — will be replaced in Tasks 14 and 15
-const MapPage = () => <div>Map Page</div>;
+// Stub pages — will be replaced in Task 15
 const WagonsPage = () => <div>Wagons Page</div>;
 const TripsPage = () => <div>Trips Page</div>;
 const TripDetailPage = () => <div>Trip Detail Page</div>;
