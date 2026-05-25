@@ -71,6 +71,7 @@ public class WagonService {
                             .operationCode(w.getOperationCode())
                             .trainNumber(w.getCurrentTrainNumber())
                             .destinationStationCode(w.getDestinationStationCode())
+                            .activeTripId(w.getActiveTrip() != null ? w.getActiveTrip().getId() : null)
                             .lat(s.getLat())
                             .lng(s.getLng())
                             .build();

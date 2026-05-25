@@ -6,6 +6,7 @@ import DirectionsRailwayIcon from '@mui/icons-material/DirectionsRailway';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 
 const SIDEBAR_WIDTH = 220;
+const APPBAR_HEIGHT = 64;
 
 const NAV_ITEMS = [
   { label: 'Карта',   path: '/map',    icon: <MapIcon /> },
@@ -17,8 +18,10 @@ export default function Layout() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
+  const isMap = pathname === '/map';
+
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
       <AppBar position="fixed" sx={{ zIndex: 1300, bgcolor: 'primary.main' }}>
         <Toolbar>
           <Typography variant="h6" fontWeight={600}>
@@ -28,8 +31,16 @@ export default function Layout() {
       </AppBar>
 
       <Drawer variant="permanent"
-        sx={{ width: SIDEBAR_WIDTH,
-              '& .MuiDrawer-paper': { width: SIDEBAR_WIDTH, mt: '64px' } }}>
+        sx={{
+          width: SIDEBAR_WIDTH,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            width: SIDEBAR_WIDTH,
+            top: `${APPBAR_HEIGHT}px`,
+            height: `calc(100% - ${APPBAR_HEIGHT}px)`,
+            boxSizing: 'border-box',
+          },
+        }}>
         <List>
           {NAV_ITEMS.map(item => (
             <ListItemButton key={item.path}
@@ -42,8 +53,18 @@ export default function Layout() {
         </List>
       </Drawer>
 
-      <Box component="main"
-        sx={{ flexGrow: 1, mt: '64px', ml: `${SIDEBAR_WIDTH}px`, p: 2, height: 'calc(100vh - 64px)', overflow: 'auto' }}>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          mt: `${APPBAR_HEIGHT}px`,
+          ml: `${SIDEBAR_WIDTH}px`,
+          height: `calc(100vh - ${APPBAR_HEIGHT}px)`,
+          overflow: isMap ? 'hidden' : 'auto',
+          p: isMap ? 0 : 3,
+          display: 'flex',
+          flexDirection: 'column',
+        }}>
         <Outlet />
       </Box>
     </Box>

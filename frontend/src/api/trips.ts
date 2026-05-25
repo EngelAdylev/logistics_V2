@@ -16,6 +16,7 @@ export interface TripDto {
 export interface TripEventDto {
   id: string;
   stationCode: string | null;
+  stationName: string | null;
   operationCode: string | null;
   operationName: string | null;
   operationDatetime: string | null;
