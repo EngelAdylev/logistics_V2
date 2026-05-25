@@ -14,8 +14,15 @@ import ru.alabuga.dislocation.predicate.WagonPredicate;
 import ru.alabuga.dislocation.repository.RailwayStationRepository;
 import ru.alabuga.dislocation.repository.WagonRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+import ru.alabuga.dislocation.model.RailwayStation;
+
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,29 +42,35 @@ public class WagonService {
     public WagonDto getById(UUID id) {
         return wagonRepo.findById(id)
                 .map(this::toDto)
-                .orElseThrow(() -> new jakarta.persistence.EntityNotFoundException("Wagon not found: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Wagon not found: " + id));
     }
 
     public List<WagonMapDto> getForMap() {
-        return wagonRepo.findAll().stream()
-                .filter(w -> w.getStationCode() != null)
+        List<Wagon> wagons = wagonRepo.findAllWithStation();
+
+        Set<String> stationCodes = wagons.stream()
+                .map(Wagon::getStationCode)
+                .collect(Collectors.toSet());
+
+        Map<String, RailwayStation> stationMap = stationRepo.findAllById(stationCodes).stream()
+                .collect(Collectors.toMap(RailwayStation::getCode, s -> s));
+
+        return wagons.stream()
                 .map(w -> {
-                    WagonMapDto.WagonMapDtoBuilder dto = WagonMapDto.builder()
+                    RailwayStation s = stationMap.get(w.getStationCode());
+                    if (s == null) return null;
+                    return WagonMapDto.builder()
                             .id(w.getId())
                             .wagonNumber(w.getWagonNumber())
                             .remainingDistance(w.getRemainingDistance())
                             .operationCode(w.getOperationCode())
                             .trainNumber(w.getCurrentTrainNumber())
-                            .destinationStationCode(w.getDestinationStationCode());
-
-                    stationRepo.findById(w.getStationCode()).ifPresent(s -> {
-                        dto.lat(s.getLat());
-                        dto.lng(s.getLng());
-                    });
-
-                    return dto.build();
+                            .destinationStationCode(w.getDestinationStationCode())
+                            .lat(s.getLat())
+                            .lng(s.getLng())
+                            .build();
                 })
-                .filter(d -> d.getLat() != null)
+                .filter(Objects::nonNull)
                 .toList();
     }
 
