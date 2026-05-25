@@ -7,4 +7,6 @@
 
     <include file="classpath:db/changelog/V1__create_schema.sql"
              relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/V2__dedup_events.sql"
+             relativeToChangelogFile="false"/>
 </databaseChangeLog>

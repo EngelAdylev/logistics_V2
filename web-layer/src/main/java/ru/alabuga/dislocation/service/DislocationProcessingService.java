@@ -23,8 +23,14 @@ public class DislocationProcessingService {
     private final WagonTripRepository tripRepo;
 
     public void process(DislocationWebhookPayload payload) {
-        // 1. Идемпотентность
+        // 1. Идемпотентность по rzd_id
         if (eventRepo.existsByRzdId(payload.getRzdId())) {
+            return;
+        }
+        // 1b. Логическая дедупликация: одна операция на вагон в момент времени
+        if (payload.getOperationCode() != null && payload.getOperationDatetime() != null
+                && eventRepo.existsByWagonNumberAndOperationCodeAndOperationDatetime(
+                        payload.getWagonNumber(), payload.getOperationCode(), payload.getOperationDatetime())) {
             return;
         }
 

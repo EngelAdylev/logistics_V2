@@ -19,6 +19,8 @@ import ru.alabuga.dislocation.repository.RailwayStationRepository;
 import ru.alabuga.dislocation.repository.WagonTripRepository;
 import ru.alabuga.dislocation.util.OperationCodeUtil;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -50,14 +52,24 @@ public class TripService {
     public List<TripEventDto> getEvents(UUID tripId) {
         List<DislocationEvent> events = eventRepo.findByTripIdOrdered(tripId);
 
-        Set<String> codes = events.stream()
+        // Дедуплицируем: одна операция в одно время на одной станции = одно событие
+        List<DislocationEvent> unique = new ArrayList<>(
+                events.stream().collect(Collectors.toMap(
+                        e -> e.getOperationCode() + "|" + e.getOperationDatetime() + "|" + e.getStationCode(),
+                        e -> e,
+                        (a, b) -> a,
+                        LinkedHashMap::new
+                )).values()
+        );
+
+        Set<String> codes = unique.stream()
                 .map(DislocationEvent::getStationCode)
                 .filter(c -> c != null)
                 .collect(Collectors.toSet());
         Map<String, String> stationNames = stationRepo.findAllById(codes).stream()
                 .collect(Collectors.toMap(RailwayStation::getCode, RailwayStation::getName));
 
-        return events.stream()
+        return unique.stream()
                 .map(e -> toEventDto(e, stationNames))
                 .toList();
     }
