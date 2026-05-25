@@ -1,6 +1,7 @@
 package ru.alabuga.dislocation.dto.webhook;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.Instant;
@@ -11,9 +12,11 @@ import java.util.stream.Stream;
 @Data
 public class DislocationWebhookPayload {
 
+    @NotNull
     @JsonProperty("_id")
     private UUID rzdId;
 
+    @NotNull
     @JsonProperty("railway_carriage_number")
     private String wagonNumber;
 

@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: alis
+      POSTGRES_USER: alis
+      POSTGRES_PASSWORD: alis
+    ports:
+      - "5432:5432"
+
+  backend:
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres:5432/alis
+      DATABASE_USERNAME: alis
+      DATABASE_PASSWORD: alis
+      WEBHOOK_SECRET: ""
