@@ -21,6 +21,7 @@ public class SecurityConfig {
                 .requestMatchers("/webhook/**").permitAll()   // РЖД не шлёт токен
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/actuator/health").permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .oauth2ResourceServer(oauth2 ->
