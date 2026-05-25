@@ -11,6 +11,7 @@ import ru.alabuga.dislocation.util.OperationCodeUtil;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -50,8 +51,8 @@ public class DislocationProcessingService {
 
         // 6. Закрыть рейс если вагон прибыл к пункту назначения
         if ("96".equals(payload.getOperationCode())
-                && payload.getStationCode() != null
-                && payload.getStationCode().equals(trip.getDstStationCode())) {
+                && Objects.equals(payload.getStationCode(), trip.getDstStationCode())
+                && trip.getDstStationCode() != null) {
             trip.setStatus(TripStatus.COMPLETED);
             trip.setFinishedAt(Instant.now());
             tripRepo.save(trip);
@@ -90,6 +91,7 @@ public class DislocationProcessingService {
                 .build();
         trip = tripRepo.save(trip);
         wagon.setActiveTrip(trip);
+        wagonRepo.save(wagon);
         return trip;
     }
 
