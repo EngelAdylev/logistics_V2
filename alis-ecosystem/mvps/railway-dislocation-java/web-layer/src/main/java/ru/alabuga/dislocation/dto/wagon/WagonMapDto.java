@@ -17,4 +17,5 @@ public class WagonMapDto {
     private String operationCode;
     private String trainNumber;
     private String destinationStationCode;
+    private UUID activeTripId;
 }

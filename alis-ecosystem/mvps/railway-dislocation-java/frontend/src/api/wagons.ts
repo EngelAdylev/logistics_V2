@@ -9,6 +9,7 @@ export interface WagonMapDto {
   operationCode: string | null;
   trainNumber: string | null;
   destinationStationCode: string | null;
+  activeTripId: string | null;
 }
 
 export interface WagonDto {

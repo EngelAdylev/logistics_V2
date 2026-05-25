@@ -12,6 +12,7 @@ import java.util.UUID;
 public class TripEventDto {
     private UUID id;
     private String stationCode;
+    private String stationName;
     private String operationCode;
     private String operationName;
     private Instant operationDatetime;
