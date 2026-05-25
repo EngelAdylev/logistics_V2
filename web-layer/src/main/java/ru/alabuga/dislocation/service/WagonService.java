@@ -2,6 +2,7 @@ package ru.alabuga.dislocation.service;
 
 import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -58,7 +60,10 @@ public class WagonService {
         return wagons.stream()
                 .map(w -> {
                     RailwayStation s = stationMap.get(w.getStationCode());
-                    if (s == null) return null;
+                    if (s == null) {
+                        log.warn("Wagon {} at unknown stationCode={} — skipping from map", w.getWagonNumber(), w.getStationCode());
+                        return null;
+                    }
                     return WagonMapDto.builder()
                             .id(w.getId())
                             .wagonNumber(w.getWagonNumber())

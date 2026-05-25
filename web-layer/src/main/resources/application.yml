@@ -3,8 +3,8 @@ spring:
     name: railway-dislocation
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/alis}
-    username: ${DATABASE_USERNAME:alis}
-    password: ${DATABASE_PASSWORD:alis}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -29,3 +29,6 @@ server:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+
+webhook:
+  secret: ${WEBHOOK_SECRET:}
