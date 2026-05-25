@@ -6,7 +6,7 @@ import lombok.*;
 import java.time.Instant;
 
 @Entity
-@Table(name = "wagon_trip", schema = "dislocation")
+@Table(name = "wagon_trip")
 @Getter
 @Setter
 @Builder
