@@ -6,7 +6,7 @@ import lombok.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "railway_station", schema = "dislocation")
+@Table(name = "railway_station")
 @Getter
 @Setter
 @Builder

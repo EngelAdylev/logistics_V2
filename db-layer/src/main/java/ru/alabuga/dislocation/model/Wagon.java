@@ -9,7 +9,7 @@ import java.time.Instant;
 import java.util.List;
 
 @Entity
-@Table(name = "wagon", schema = "dislocation")
+@Table(name = "wagon")
 @Getter
 @Setter
 @Builder

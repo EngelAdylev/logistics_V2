@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "dislocation_event", schema = "dislocation")
+@Table(name = "dislocation_event")
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
