@@ -10,11 +10,9 @@ spring:
       ddl-auto: validate
     properties:
       hibernate:
-        default_schema: dislocation
         dialect: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
-    default-schema: dislocation
   security:
     oauth2:
       resourceserver:

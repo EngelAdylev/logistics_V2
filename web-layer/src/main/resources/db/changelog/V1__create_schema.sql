@@ -1,6 +1,4 @@
-CREATE SCHEMA IF NOT EXISTS dislocation;
-
-CREATE TABLE dislocation.railway_station (
+CREATE TABLE railway_station (
     code    VARCHAR(20)   PRIMARY KEY,
     name    VARCHAR(255),
     lat     DECIMAL(9,6),
@@ -8,7 +6,7 @@ CREATE TABLE dislocation.railway_station (
 );
 
 -- wagon_trip created without FK on wagon (will be added below via ALTER TABLE)
-CREATE TABLE dislocation.wagon_trip (
+CREATE TABLE wagon_trip (
     id               UUID          PRIMARY KEY DEFAULT gen_random_uuid(),
     wagon_id         UUID          NOT NULL,
     dep_station_code VARCHAR(20),
@@ -22,7 +20,7 @@ CREATE TABLE dislocation.wagon_trip (
     updated_at       TIMESTAMP     DEFAULT NOW()
 );
 
-CREATE TABLE dislocation.wagon (
+CREATE TABLE wagon (
     id                          UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
     wagon_number                VARCHAR(20)  UNIQUE NOT NULL,
     station_code                VARCHAR(20),
@@ -33,7 +31,7 @@ CREATE TABLE dislocation.wagon (
     operation_code              VARCHAR(10),
     operation_name              VARCHAR(100),
     last_seen_at                TIMESTAMP,
-    active_trip_id              UUID         REFERENCES dislocation.wagon_trip(id),
+    active_trip_id              UUID         REFERENCES wagon_trip(id),
     destination_station_code    VARCHAR(20),
     shipper_okpo                VARCHAR(20),
     consignee_okpo              VARCHAR(20),
@@ -45,11 +43,11 @@ CREATE TABLE dislocation.wagon (
 );
 
 -- Now add the FK from wagon_trip to wagon
-ALTER TABLE dislocation.wagon_trip
+ALTER TABLE wagon_trip
     ADD CONSTRAINT fk_wagon_trip_wagon
-    FOREIGN KEY (wagon_id) REFERENCES dislocation.wagon(id);
+    FOREIGN KEY (wagon_id) REFERENCES wagon(id);
 
-CREATE TABLE dislocation.dislocation_event (
+CREATE TABLE dislocation_event (
     id                           UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
     rzd_id                       UUID        UNIQUE NOT NULL,
     received_at                  TIMESTAMP   NOT NULL,
@@ -82,13 +80,13 @@ CREATE TABLE dislocation.dislocation_event (
     number_loaded_containers     INTEGER,
     number_empty_containers      INTEGER,
     number_of_seals              INTEGER,
-    trip_id                      UUID        REFERENCES dislocation.wagon_trip(id),
+    trip_id                      UUID        REFERENCES wagon_trip(id),
     created_at                   TIMESTAMP   DEFAULT NOW()
 );
 
-CREATE INDEX idx_event_wagon_number ON dislocation.dislocation_event(wagon_number);
-CREATE INDEX idx_event_trip_id      ON dislocation.dislocation_event(trip_id);
-CREATE INDEX idx_event_rzd_id       ON dislocation.dislocation_event(rzd_id);
-CREATE INDEX idx_trip_wagon_id      ON dislocation.wagon_trip(wagon_id);
-CREATE INDEX idx_trip_status        ON dislocation.wagon_trip(status);
-CREATE INDEX idx_wagon_number       ON dislocation.wagon(wagon_number);
+CREATE INDEX idx_event_wagon_number ON dislocation_event(wagon_number);
+CREATE INDEX idx_event_trip_id      ON dislocation_event(trip_id);
+CREATE INDEX idx_event_rzd_id       ON dislocation_event(rzd_id);
+CREATE INDEX idx_trip_wagon_id      ON wagon_trip(wagon_id);
+CREATE INDEX idx_trip_status        ON wagon_trip(status);
+CREATE INDEX idx_wagon_number       ON wagon(wagon_number);
