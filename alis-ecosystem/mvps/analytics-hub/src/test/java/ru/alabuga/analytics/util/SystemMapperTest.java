@@ -23,6 +23,12 @@ class SystemMapperTest {
     }
 
     @Test
+    void outbound_client_prefix_maps_to_1c() {
+        assertThat(SystemMapper.fromMessageType("CLIENT_ORDER")).isEqualTo("1C");
+        assertThat(SystemMapper.fromMessageType("CLIENT_INVOICE")).isEqualTo("1C");
+    }
+
+    @Test
     void outbound_unknown_maps_to_datareon() {
         assertThat(SystemMapper.fromMessageType("UNKNOWN_TYPE")).isEqualTo("DATAREON");
     }
