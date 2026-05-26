@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react'
 import {
   Alert, Box, CircularProgress, Divider, FormControl,
   InputLabel, MenuItem, Paper, Select, Stack, Table, TableBody,
-  TableCell, TableContainer, TableHead, TableRow, Typography
+  TableCell, TableContainer, TableHead, TableRow, TextField, Typography
 } from '@mui/material'
 import StatCard from '../components/StatCard'
 import { usePolling } from '../hooks/usePolling'
@@ -33,6 +33,8 @@ function formatDuration(minutes: number): string {
 
 export default function OrdersPage() {
   const [typeFilter, setTypeFilter] = useState<'ALL' | 'RECEIVING' | 'SHIPPING'>('ALL')
+  const [clientFilter, setClientFilter] = useState<string>('ALL')
+  const [dateFilter, setDateFilter] = useState<string>('')
 
   const summaryFetcher = useCallback(() => ordersApi.getSummary(), [])
   const { data: summary, error: summaryError } = usePolling(summaryFetcher)
@@ -42,6 +44,16 @@ export default function OrdersPage() {
 
   const receiving = summary?.find(s => s.type === 'RECEIVING')
   const shipping = summary?.find(s => s.type === 'SHIPPING')
+
+  const clientNames = stuck
+    ? ['ALL', ...new Set(stuck.map(o => o.clientName).filter(Boolean))]
+    : ['ALL']
+
+  const filteredStuck = stuck?.filter(o => {
+    const clientMatch = clientFilter === 'ALL' || o.clientName === clientFilter
+    const dateMatch = !dateFilter || (o.updatedAt && o.updatedAt >= dateFilter)
+    return clientMatch && dateMatch
+  })
 
   return (
     <Stack spacing={3}>
@@ -59,7 +71,7 @@ export default function OrdersPage() {
 
       <Divider />
 
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
         <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
           Зависшие заказы (IN_PROGRESS более 4 часов)
         </Typography>
@@ -72,11 +84,29 @@ export default function OrdersPage() {
             <MenuItem value="SHIPPING">Отгрузка</MenuItem>
           </Select>
         </FormControl>
+        <FormControl size="small" sx={{ minWidth: 160 }}>
+          <InputLabel>Клиент</InputLabel>
+          <Select value={clientFilter} label="Клиент"
+            onChange={e => setClientFilter(e.target.value)}>
+            {clientNames.map(name => (
+              <MenuItem key={name} value={name}>{name === 'ALL' ? 'Все' : name}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <TextField
+          size="small"
+          label="С даты"
+          type="date"
+          value={dateFilter}
+          onChange={e => setDateFilter(e.target.value)}
+          slotProps={{ inputLabel: { shrink: true } }}
+          sx={{ minWidth: 160 }}
+        />
       </Box>
 
       {loading && <CircularProgress />}
 
-      {stuck && (
+      {filteredStuck && (
         <TableContainer component={Paper} variant="outlined">
           <Table size="small">
             <TableHead>
@@ -90,14 +120,14 @@ export default function OrdersPage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {stuck.length === 0 && (
+              {filteredStuck.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={6} align="center">
                     <Typography color="text.secondary">Зависших заказов нет</Typography>
                   </TableCell>
                 </TableRow>
               )}
-              {stuck.map((o: StuckOrderDto) => (
+              {filteredStuck.map((o: StuckOrderDto) => (
                 <TableRow key={o.id} hover>
                   <TableCell>{o.type === 'RECEIVING' ? 'Приёмка' : 'Отгрузка'}</TableCell>
                   <TableCell>#{o.number}</TableCell>
