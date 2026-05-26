@@ -32,6 +32,7 @@ public class DatareonService {
 
         long inboundTotal = inboundEventRepository.countByCreatedAtAfter(since);
         long inboundSuccess = inboundEventRepository.countByStatusAndCreatedAtAfter("DONE", since);
+        long inboundErrors = inboundEventRepository.countErrors(since);
         long inboundStuck = inboundEventRepository.countStuck(stuckThreshold);
 
         long outboundTotal = outboundDataRepository.countByCreatedAtAfter(since);
@@ -42,7 +43,7 @@ public class DatareonService {
         return new SummaryDto(
             inboundTotal + outboundTotal,
             inboundSuccess + outboundSuccess,
-            outboundErrors,
+            inboundErrors + outboundErrors,
             inboundStuck + outboundStuck
         );
     }
@@ -104,7 +105,7 @@ public class DatareonService {
 
     private String resolveInboundStatus(InboundEvent e, LocalDateTime stuckThreshold) {
         if ("DONE".equals(e.getStatus())) return "Успешно";
-        if (e.getStatus() != null && e.getStatus().contains("ERROR")) return "Ошибка";
+        if ("FAILED".equals(e.getStatus()) || "INVALID".equals(e.getStatus())) return "Ошибка";
         if (e.getCreatedAt().isBefore(stuckThreshold)) return "Завис";
         return "В обработке";
     }

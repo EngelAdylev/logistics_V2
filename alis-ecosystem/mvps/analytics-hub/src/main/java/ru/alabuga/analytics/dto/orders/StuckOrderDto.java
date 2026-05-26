@@ -7,7 +7,7 @@ public record StuckOrderDto(
     Integer number,
     String type,           // "RECEIVING" | "SHIPPING"
     String orderStatus,
-    String clientId,
+    String clientName,
     LocalDateTime updatedAt,
     long minutesInStatus
 ) {}

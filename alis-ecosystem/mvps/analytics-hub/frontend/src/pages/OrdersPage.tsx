@@ -101,7 +101,7 @@ export default function OrdersPage() {
                 <TableRow key={o.id} hover>
                   <TableCell>{o.type === 'RECEIVING' ? 'Приёмка' : 'Отгрузка'}</TableCell>
                   <TableCell>#{o.number}</TableCell>
-                  <TableCell>{o.clientId}</TableCell>
+                  <TableCell>{o.clientName}</TableCell>
                   <TableCell>{o.orderStatus}</TableCell>
                   <TableCell sx={{ color: 'warning.main', fontWeight: 'bold' }}>
                     {formatDuration(o.minutesInStatus)}

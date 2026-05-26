@@ -31,6 +31,7 @@ class DatareonServiceTest {
     void summary_combines_inbound_and_outbound_counts() {
         when(inboundEventRepository.countByCreatedAtAfter(any())).thenReturn(10L);
         when(inboundEventRepository.countByStatusAndCreatedAtAfter(any(), any())).thenReturn(8L);
+        when(inboundEventRepository.countErrors(any())).thenReturn(0L);
         when(inboundEventRepository.countStuck(any())).thenReturn(1L);
 
         when(outboundDataRepository.countByCreatedAtAfter(any())).thenReturn(20L);
@@ -42,7 +43,7 @@ class DatareonServiceTest {
 
         assertThat(result.total()).isEqualTo(30L);
         assertThat(result.success()).isEqualTo(26L);
-        assertThat(result.errors()).isEqualTo(1L);
+        assertThat(result.errors()).isEqualTo(1L); // 0 inbound + 1 outbound
         assertThat(result.stuck()).isEqualTo(2L);
     }
 }

@@ -14,7 +14,7 @@ export interface StuckOrderDto {
   number: number
   type: 'RECEIVING' | 'SHIPPING'
   orderStatus: string
-  clientId: string
+  clientName: string
   updatedAt: string
   minutesInStatus: number
 }

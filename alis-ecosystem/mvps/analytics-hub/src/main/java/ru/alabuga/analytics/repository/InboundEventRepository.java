@@ -15,14 +15,17 @@ public interface InboundEventRepository extends JpaRepository<InboundEvent, UUID
 
     long countByStatusAndCreatedAtAfter(String status, LocalDateTime since);
 
-    @Query("SELECT COUNT(e) FROM InboundEvent e WHERE e.status <> 'DONE' AND e.createdAt < :threshold")
+    @Query("SELECT COUNT(e) FROM InboundEvent e WHERE e.status = 'NEW' AND e.createdAt < :threshold")
     long countStuck(LocalDateTime threshold);
+
+    @Query("SELECT COUNT(e) FROM InboundEvent e WHERE e.createdAt > :since AND e.status IN ('FAILED', 'INVALID')")
+    long countErrors(LocalDateTime since);
 
     Page<InboundEvent> findByCreatedAtAfterOrderByCreatedAtDesc(LocalDateTime since, Pageable pageable);
 
-    @Query("SELECT e FROM InboundEvent e WHERE e.createdAt > :since AND e.status = 'ERROR' ORDER BY e.createdAt DESC")
+    @Query("SELECT e FROM InboundEvent e WHERE e.createdAt > :since AND e.status IN ('FAILED', 'INVALID') ORDER BY e.createdAt DESC")
     Page<InboundEvent> findErrors(LocalDateTime since, Pageable pageable);
 
-    @Query("SELECT e FROM InboundEvent e WHERE e.status <> 'DONE' AND e.createdAt < :threshold ORDER BY e.createdAt DESC")
+    @Query("SELECT e FROM InboundEvent e WHERE e.status = 'NEW' AND e.createdAt < :threshold ORDER BY e.createdAt DESC")
     Page<InboundEvent> findStuck(LocalDateTime threshold, Pageable pageable);
 }
