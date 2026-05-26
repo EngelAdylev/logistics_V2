@@ -1,0 +1,57 @@
+{
+  "_comment": "Реестр всех MVP-проектов экосистемы ALIS. Обновляется OpenClaw при каждом новом проекте.",
+  "_version": "1.0.0",
+  "projects": [
+    {
+      "id": "railway-dislocation",
+      "name": "Система дислокации вагонов",
+      "description": "Автоматическое отслеживание ж/д вагонов на станции Круглое Поле (код 648400). Получает поток дислокации РЖД, формирует рейсы, управляет приёмкой груза с экспортом в 1С.",
+      "status": "done",
+      "stack": {
+        "backend": "Python 3.11 + FastAPI + SQLAlchemy + APScheduler",
+        "frontend": "React 19 + Vite (JSX, без TypeScript) + TanStack Table + React Router 7",
+        "db": "PostgreSQL (собственная схема)",
+        "auth": "собственный JWT (не Keycloak)"
+      },
+      "path": "mvps/railway-dislocation",
+      "tz": null,
+      "key_features": [
+        "Синхронизация дислокации каждые 10 мин",
+        "Иерархия: вагоны → рейсы → операции",
+        "Архивация рейсов по 8 условиям",
+        "Заявки на приёмку + экспорт JSON в 1С",
+        "Привязка ЭТРАН-накладных к рейсам",
+        "Комментарии к вагонам и рейсам",
+        "Группировка и фильтрация в таблицах",
+        "Несвязанные накладные (unbound waybills)"
+      ],
+      "key_tables": ["dislocation", "tracking_wagons", "wagon_trips", "wagon_operations", "etran_waybills", "orders", "order_items", "clients"],
+      "station": "Круглое Поле, код 648400",
+      "created": "2025-01-01",
+      "updated": "2026-05-23"
+    },
+    {
+      "id": "analytics-hub",
+      "name": "Analytics Hub — Дашборд техподдержки",
+      "description": "Мониторинг пакетов Datareon и статусов заказов ALIS в реальном времени. Read-only дашборд для техподдержки — счётчики успешных/зависших/ошибочных пакетов и список зависших заказов.",
+      "status": "done",
+      "stack": {
+        "backend": "Java 17 + Spring Boot 3.3.0 + Spring Data JPA",
+        "frontend": "React 18 + TypeScript + MUI v6 + Vite",
+        "db": "ALIS PostgreSQL (read-only, схема alis)",
+        "auth": "нет (v1)"
+      },
+      "path": "mvps/analytics-hub",
+      "key_features": [
+        "Счётчики пакетов Datareon за 1ч/6ч/24ч: всего/успешно/ошибки/зависли",
+        "Таблица событий с фильтрами по системе, статусу, периоду",
+        "Сводка заказов по статусам (приёмка + отгрузка отдельно)",
+        "Таблица зависших заказов (IN_PROGRESS > 4 часов)",
+        "Polling каждые 10 секунд без перезагрузки страницы"
+      ],
+      "key_tables": ["inbound_event", "outbound_data", "receiving_order", "shipping_order", "client"],
+      "created": "2026-05-26",
+      "updated": "2026-05-26"
+    }
+  ]
+}
