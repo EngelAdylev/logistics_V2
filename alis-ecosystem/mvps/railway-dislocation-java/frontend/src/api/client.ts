@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:8090/api',
+  baseURL: import.meta.env.VITE_API_URL ?? '/api',
 });
 
 apiClient.interceptors.request.use((config) => {
@@ -11,5 +11,10 @@ apiClient.interceptors.request.use((config) => {
   }
   return config;
 });
+
+apiClient.interceptors.response.use(
+  r => r,
+  err => Promise.reject(err)
+);
 
 export default apiClient;
