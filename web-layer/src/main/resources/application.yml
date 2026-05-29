@@ -7,17 +7,12 @@ spring:
     password: ${DATABASE_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8080/realms/KIS}
 
 server:
   port: ${SERVER_PORT:8090}
@@ -30,3 +25,15 @@ springdoc:
 
 webhook:
   secret: ${WEBHOOK_SECRET:}
+
+jwt:
+  secret: ${JWT_SECRET:disabled_auth_placeholder_secret_32ch}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
