@@ -13,6 +13,7 @@ services:
       SERVER_PORT: 8090
     restart: unless-stopped
     networks:
+      - proxy
       - internal
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8090/api/actuator/health"]
@@ -28,12 +29,13 @@ services:
       args:
         VITE_API_URL: /api
     container_name: logistics_v2_frontend
-    ports:
-      - "3080:80"
+    expose:
+      - 80
     depends_on:
       - backend
     restart: unless-stopped
     networks:
+      - proxy
       - internal
     healthcheck:
       test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost/"]
@@ -43,5 +45,7 @@ services:
       start_period: 10s
 
 networks:
+  proxy:
+    external: true
   internal:
     driver: bridge
