@@ -3,21 +3,45 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.backend
-    ports:
-      - "8090:8090"
+    container_name: logistics_v2_backend
     environment:
       DATABASE_URL: ${DATABASE_URL}
       DATABASE_USERNAME: ${DATABASE_USERNAME}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-      KEYCLOAK_ISSUER_URI: ${KEYCLOAK_ISSUER_URI:-http://localhost:8080/realms/KIS}
+      JWT_SECRET: ${JWT_SECRET:-disabled_auth_placeholder_secret_32ch}
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET:-}
+      SERVER_PORT: 8090
     restart: unless-stopped
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/api/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        VITE_API_URL: /api
+    container_name: logistics_v2_frontend
     ports:
-      - "3000:3000"
+      - "3080:80"
     depends_on:
       - backend
     restart: unless-stopped
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+networks:
+  internal:
+    driver: bridge
