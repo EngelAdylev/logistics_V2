@@ -1,5 +1,14 @@
-FROM --platform=linux/amd64 eclipse-temurin:17-jre-alpine
+FROM --platform=linux/amd64 huecker.io/library/eclipse-temurin:17-jdk-alpine AS build
 WORKDIR /app
-COPY web-layer/build/libs/*.jar app.jar
+COPY gradlew gradlew.bat settings.gradle build.gradle ./
+COPY gradle/ gradle/
+COPY db-layer/ db-layer/
+COPY web-layer/ web-layer/
+RUN chmod +x gradlew && ./gradlew :web-layer:bootJar --no-daemon -x test
+
+FROM --platform=linux/amd64 huecker.io/library/eclipse-temurin:17-jre-alpine
+RUN apk add --no-cache curl
+WORKDIR /app
+COPY --from=build /app/web-layer/build/libs/*.jar app.jar
 EXPOSE 8090
 ENTRYPOINT ["java", "-jar", "app.jar"]
