@@ -1,5 +1,21 @@
-import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
-import { getStoredAuth, storeAuth, clearAuth, type AuthResponse } from '../api/auth';
+import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
+
+export interface AuthResponse {
+  token: string;
+  username: string;
+  role: string;
+}
+
+function getStoredAuth(): AuthResponse | null {
+  try {
+    const raw = localStorage.getItem('auth');
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+const GUEST_AUTH: AuthResponse = { token: '', username: 'guest', role: 'ADMIN' };
 
 interface AuthContextValue {
   auth: AuthResponse | null;
@@ -9,26 +25,19 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-const GUEST_AUTH: AuthResponse = { token: '', username: 'guest', role: 'ADMIN' };
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [auth, setAuth] = useState<AuthResponse | null>(() => getStoredAuth() ?? GUEST_AUTH);
 
   const login = useCallback((a: AuthResponse) => {
-    storeAuth(a);
+    localStorage.setItem('auth', JSON.stringify(a));
+    localStorage.setItem('access_token', a.token);
     setAuth(a);
   }, []);
 
   const logout = useCallback(() => {
-    clearAuth();
-    setAuth(null);
-  }, []);
-
-  // Axios interceptor emits this event when 401/403 is received
-  useEffect(() => {
-    const handler = () => setAuth(null);
-    window.addEventListener('auth:logout', handler);
-    return () => window.removeEventListener('auth:logout', handler);
+    localStorage.removeItem('auth');
+    localStorage.removeItem('access_token');
+    setAuth(GUEST_AUTH);
   }, []);
 
   return (
