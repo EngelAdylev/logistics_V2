@@ -1,4 +1,4 @@
-CREATE TABLE railway_station (
+CREATE TABLE IF NOT EXISTS railway_station (
     code    VARCHAR(20)   PRIMARY KEY,
     name    VARCHAR(255),
     lat     DECIMAL(9,6),
@@ -6,7 +6,7 @@ CREATE TABLE railway_station (
 );
 
 -- wagon_trip created without FK on wagon (will be added below via ALTER TABLE)
-CREATE TABLE wagon_trip (
+CREATE TABLE IF NOT EXISTS wagon_trip (
     id               UUID          PRIMARY KEY DEFAULT gen_random_uuid(),
     wagon_id         UUID          NOT NULL,
     dep_station_code VARCHAR(20),
@@ -20,7 +20,7 @@ CREATE TABLE wagon_trip (
     updated_at       TIMESTAMP     DEFAULT NOW()
 );
 
-CREATE TABLE wagon (
+CREATE TABLE IF NOT EXISTS wagon (
     id                          UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
     wagon_number                VARCHAR(20)  UNIQUE NOT NULL,
     station_code                VARCHAR(20),
@@ -43,11 +43,19 @@ CREATE TABLE wagon (
 );
 
 -- Now add the FK from wagon_trip to wagon
-ALTER TABLE wagon_trip
-    ADD CONSTRAINT fk_wagon_trip_wagon
-    FOREIGN KEY (wagon_id) REFERENCES wagon(id);
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT constraint_name FROM information_schema.table_constraints
+        WHERE table_name = 'wagon_trip' AND constraint_name = 'fk_wagon_trip_wagon'
+    ) THEN
+        ALTER TABLE wagon_trip
+            ADD CONSTRAINT fk_wagon_trip_wagon
+            FOREIGN KEY (wagon_id) REFERENCES wagon(id);
+    END IF;
+END $$;
 
-CREATE TABLE dislocation_event (
+CREATE TABLE IF NOT EXISTS dislocation_event (
     id                           UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
     rzd_id                       UUID        UNIQUE NOT NULL,
     received_at                  TIMESTAMP   NOT NULL,
@@ -84,9 +92,9 @@ CREATE TABLE dislocation_event (
     created_at                   TIMESTAMP   DEFAULT NOW()
 );
 
-CREATE INDEX idx_event_wagon_number ON dislocation_event(wagon_number);
-CREATE INDEX idx_event_trip_id      ON dislocation_event(trip_id);
-CREATE INDEX idx_event_rzd_id       ON dislocation_event(rzd_id);
-CREATE INDEX idx_trip_wagon_id      ON wagon_trip(wagon_id);
-CREATE INDEX idx_trip_status        ON wagon_trip(status);
-CREATE INDEX idx_wagon_number       ON wagon(wagon_number);
+CREATE INDEX IF NOT EXISTS idx_event_wagon_number ON dislocation_event(wagon_number);
+CREATE INDEX IF NOT EXISTS idx_event_trip_id      ON dislocation_event(trip_id);
+CREATE INDEX IF NOT EXISTS idx_event_rzd_id       ON dislocation_event(rzd_id);
+CREATE INDEX IF NOT EXISTS idx_trip_wagon_id      ON wagon_trip(wagon_id);
+CREATE INDEX IF NOT EXISTS idx_trip_status        ON wagon_trip(status);
+CREATE INDEX IF NOT EXISTS idx_wagon_number       ON wagon(wagon_number);

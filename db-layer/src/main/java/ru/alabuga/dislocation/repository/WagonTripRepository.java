@@ -1,6 +1,7 @@
 package ru.alabuga.dislocation.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
@@ -8,6 +9,7 @@ import ru.alabuga.dislocation.model.TripStatus;
 import ru.alabuga.dislocation.model.WagonTrip;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,6 +31,17 @@ public interface WagonTripRepository
             @Param("startOfDay") Instant startOfDay,
             @Param("startOfNextDay") Instant startOfNextDay,
             @Param("status") TripStatus status
+    );
+
+    @Query("""
+        SELECT t FROM WagonTrip t
+        WHERE t.wagon.id = :wagonId
+          AND t.status = 'ACTIVE'
+          AND t.id <> :excludeTripId
+        """)
+    List<WagonTrip> findOtherActiveTrips(
+            @Param("wagonId") UUID wagonId,
+            @Param("excludeTripId") UUID excludeTripId
     );
 
     long countByStatus(TripStatus status);

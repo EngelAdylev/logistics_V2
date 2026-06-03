@@ -11,11 +11,14 @@ import java.util.UUID;
 public class WagonMapDto {
     private UUID id;
     private String wagonNumber;
+    private String stationCode;
+    private String stationName;
     private BigDecimal lat;
     private BigDecimal lng;
     private Integer remainingDistance;
     private String operationCode;
     private String trainNumber;
+    private String trainIndex;
     private String destinationStationCode;
     private UUID activeTripId;
 }

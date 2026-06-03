@@ -18,6 +18,15 @@ public interface WagonRepository
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<Wagon> findByWagonNumber(String wagonNumber);
 
-    @Query("SELECT w FROM Wagon w WHERE w.stationCode IS NOT NULL")
+    @Query("SELECT w FROM Wagon w WHERE w.stationCode IS NOT NULL AND w.activeTrip IS NOT NULL")
     List<Wagon> findAllWithStation();
+
+    @Query("SELECT w FROM Wagon w WHERE w.currentTrainNumber IS NOT NULL ORDER BY w.currentTrainNumber, w.wagonPosition NULLS LAST")
+    List<Wagon> findAllInTrains();
+
+    List<Wagon> findByCurrentTrainNumberAndCurrentTrainIndexOrderByWagonPositionAsc(
+            String trainNumber, String trainIndex);
+
+    List<Wagon> findByCurrentTrainNumberAndCurrentTrainIndexIsNullOrderByWagonPositionAsc(
+            String trainNumber);
 }

@@ -42,4 +42,19 @@ public class Wagon extends AbstractBaseEntity {
 
     private Integer cargoWeight;
     private Instant dateArrivalAtDestination;
+
+    // Денормализованные поля из последнего события
+    private String wagonType;
+    private String waybillNumber;
+    private String sendingNumber;
+    private Integer wagonPosition;
+    private Integer distanceTraveled;
+    private Integer totalDistance;
+    private String gngCode;
+    private Integer numberLoadedContainers;
+    private Integer numberEmptyContainers;
+    private Instant flightStartDate;
+    private String flightStartStationCode;
+    private String flightStartStationName;
+    private String destinationStationName;
 }

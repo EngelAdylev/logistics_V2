@@ -3,6 +3,7 @@ package ru.alabuga.dislocation.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import ru.alabuga.dislocation.dto.wagon.WagonDto;
@@ -13,6 +14,7 @@ import ru.alabuga.dislocation.service.WagonService;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Tag(name = "wagons")
 @RestController
 @RequestMapping("/wagons")
@@ -35,7 +37,8 @@ public class WagonController {
 
     @Operation(summary = "Все вагоны для карты (лёгкий формат)")
     @GetMapping("/map")
-    public List<WagonMapDto> getForMap() {
+    public List<WagonMapDto> getForMap(jakarta.servlet.http.HttpServletRequest request) {
+        log.info("GET /wagons/map — auth={}", request.getHeader("Authorization") != null ? "present" : "missing");
         return wagonService.getForMap();
     }
 }

@@ -9,4 +9,14 @@
              relativeToChangelogFile="false"/>
     <include file="classpath:db/changelog/V2__dedup_events.sql"
              relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/V3__wagon_extra_fields_and_comments.sql"
+             relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/V4__etran_invoice.sql"
+             relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/V5__app_user.sql"
+             relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/V6__add_missing_station_columns.sql"
+             relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/V7__sync_cursor.sql"
+             relativeToChangelogFile="false"/>
 </databaseChangeLog>
