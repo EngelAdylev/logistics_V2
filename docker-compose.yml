@@ -3,6 +3,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.backend
+      args:
+        REBUILD: "20260605-2"
     container_name: logistics_v2_backend
     environment:
       DATABASE_URL: ${DATABASE_URL}
