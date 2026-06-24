@@ -28,6 +28,13 @@ public class SecurityConfig {
         return http.build();
     }
 
+    // Требуется AuthService: хеширование паролей дефолтных пользователей и
+    // проверка при логине. Без этого бина контекст не поднимается.
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
