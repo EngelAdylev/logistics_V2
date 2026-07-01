@@ -48,7 +48,36 @@ export interface WagonDto {
   activeTripId: string | null;
 }
 
+export interface WagonFilter {
+  wagonNumber?: string | null;
+  trainNumber?: string | null;
+  stationCode?: string | null;
+  operationCode?: string | null;
+  destinationStationCode?: string | null;
+  hasContainers?: boolean | null;
+}
+
+export interface WagonPageRequest {
+  filter?: WagonFilter;
+  page?: number;
+  size?: number;
+}
+
+export interface Page<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  number: number;
+  size: number;
+}
+
 export const wagonsApi = {
   getForMap: () =>
     apiClient.get<WagonMapDto[]>('/wagons/map').then(r => r.data),
+
+  // Тянем большой батч и фильтруем/группируем на клиенте (как в старой «Дислокации»)
+  getPage: (req: WagonPageRequest = {}) =>
+    apiClient
+      .post<Page<WagonDto>>('/wagons/page', { page: 0, size: 10000, ...req })
+      .then(r => r.data),
 };

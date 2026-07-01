@@ -1,26 +1,26 @@
 import { Box, AppBar, Toolbar, Typography, Drawer, List,
-         ListItemButton, ListItemIcon, ListItemText, IconButton, Tooltip } from '@mui/material';
+         ListItemButton, ListItemIcon, ListItemText, IconButton, Tooltip, Avatar } from '@mui/material';
 import MapIcon from '@mui/icons-material/Map';
 import DirectionsRailwayIcon from '@mui/icons-material/DirectionsRailway';
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import TableRowsIcon from '@mui/icons-material/TableRows';
+import TrainIcon from '@mui/icons-material/Train';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const SIDEBAR_WIDTH = 220;
-const APPBAR_HEIGHT = 64;
+const SIDEBAR_WIDTH = 224;
+const APPBAR_HEIGHT = 60;
 
 const NAV_ITEMS = [
-  { label: 'Поезда',    path: '/trains',   icon: <DirectionsRailwayIcon />, adminOnly: false },
-  { label: 'Карта',     path: '/map',      icon: <MapIcon />,              adminOnly: true  },
-  { label: 'Накладные', path: '/invoices', icon: <ReceiptLongIcon />,      adminOnly: true  },
+  { label: 'Дислокация', path: '/dislocation', icon: <TableRowsIcon /> },
+  { label: 'Поезда',     path: '/trains',      icon: <DirectionsRailwayIcon /> },
+  { label: 'Карта',      path: '/map',         icon: <MapIcon /> },
 ];
 
 export default function Layout() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { auth, logout } = useAuth();
-  const admin = auth?.role === 'ADMIN';
   const isMap = pathname === '/map';
 
   const handleLogout = () => {
@@ -28,22 +28,35 @@ export default function Layout() {
     navigate('/login', { replace: true });
   };
 
-  const visibleItems = NAV_ITEMS.filter(item => !item.adminOnly || admin);
-
   return (
     <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
-      <AppBar position="fixed" sx={{ zIndex: 1300, bgcolor: 'primary.main' }}>
-        <Toolbar>
-          <Typography variant="h6" fontWeight={600} sx={{ flex: 1 }}>
-            Дислокация вагонов
-          </Typography>
+      <AppBar position="fixed"
+        elevation={0}
+        sx={{
+          zIndex: 1300,
+          bgcolor: 'background.paper',
+          color: 'text.primary',
+          borderBottom: '1px solid',
+          borderColor: 'divider',
+        }}>
+        <Toolbar sx={{ minHeight: `${APPBAR_HEIGHT}px !important`, gap: 1.5 }}>
+          <Avatar variant="rounded"
+            sx={{ bgcolor: 'primary.main', width: 32, height: 32, borderRadius: 2 }}>
+            <TrainIcon sx={{ fontSize: 20 }} />
+          </Avatar>
+          <Box sx={{ flex: 1 }}>
+            <Typography variant="subtitle1" fontWeight={800} lineHeight={1.1}>
+              ЛКДС · Дислокация
+            </Typography>
+            <Typography variant="caption" color="text.secondary" lineHeight={1}>
+              Круглое Поле · вагоны и рейсы
+            </Typography>
+          </Box>
           {auth && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography variant="body2" sx={{ opacity: 0.85 }}>
-                {auth.username}
-              </Typography>
+              <Typography variant="body2" color="text.secondary">{auth.username}</Typography>
               <Tooltip title="Выйти">
-                <IconButton color="inherit" size="small" onClick={handleLogout}>
+                <IconButton size="small" onClick={handleLogout}>
                   <LogoutIcon fontSize="small" />
                 </IconButton>
               </Tooltip>
@@ -61,17 +74,31 @@ export default function Layout() {
             top: `${APPBAR_HEIGHT}px`,
             height: `calc(100% - ${APPBAR_HEIGHT}px)`,
             boxSizing: 'border-box',
+            borderRight: '1px solid',
+            borderColor: 'divider',
+            bgcolor: 'background.paper',
           },
         }}>
-        <List>
-          {visibleItems.map(item => (
-            <ListItemButton key={item.path}
-              selected={pathname.startsWith(item.path)}
-              onClick={() => navigate(item.path)}>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.label} />
-            </ListItemButton>
-          ))}
+        <List sx={{ px: 1.5, py: 2 }}>
+          {NAV_ITEMS.map(item => {
+            const selected = pathname.startsWith(item.path);
+            return (
+              <ListItemButton key={item.path}
+                selected={selected}
+                onClick={() => navigate(item.path)}
+                sx={{
+                  borderRadius: 2,
+                  mb: 0.5,
+                  color: selected ? 'primary.main' : 'text.secondary',
+                  '&.Mui-selected': { bgcolor: 'primary.light' },
+                  '&.Mui-selected:hover': { bgcolor: 'primary.light' },
+                }}>
+                <ListItemIcon sx={{ minWidth: 38, color: 'inherit' }}>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.label}
+                  primaryTypographyProps={{ fontWeight: selected ? 700 : 600, fontSize: 14 }} />
+              </ListItemButton>
+            );
+          })}
         </List>
       </Drawer>
 
@@ -82,7 +109,7 @@ export default function Layout() {
           mt: `${APPBAR_HEIGHT}px`,
           height: `calc(100vh - ${APPBAR_HEIGHT}px)`,
           overflow: isMap ? 'hidden' : 'auto',
-          p: isMap ? 0 : 3,
+          p: isMap ? 0 : 2.5,
           display: 'flex',
           flexDirection: 'column',
         }}>

@@ -11,6 +11,7 @@ import App from './App';
 import { theme } from './theme';
 import { AuthProvider } from './context/AuthContext';
 import { setNavigate } from './api/navigationRef';
+import './index.css';
 import 'leaflet/dist/leaflet.css';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
