@@ -45,7 +45,15 @@ public class WagonService {
     public Page<WagonDto> getPage(WagonPageRequest request) {
         Predicate predicate = wagonPredicate.build(request.getFilter());
         PageRequest pageRequest = PageRequest.of(request.getPage(), request.getSize());
-        return wagonRepo.findAll(predicate, pageRequest).map(w -> toDto(w, Map.of()));
+        Page<Wagon> page = wagonRepo.findAll(predicate, pageRequest);
+
+        // Названия станций подтягиваем из справочника (в самом вагоне хранится только код)
+        Map<String, String> stationNames = resolveStationNames(page.getContent().stream()
+                .flatMap(w -> Stream.of(w.getStationCode(), w.getFlightStartStationCode(), w.getDestinationStationCode()))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet()));
+
+        return page.map(w -> toDto(w, stationNames));
     }
 
     public WagonDto getById(UUID id) {
