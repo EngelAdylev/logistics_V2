@@ -233,6 +233,20 @@ body {
   padding: 40px 0 !important;
 }
 
+/* ── Бейдж «На карте» ── */
+.onmap-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px; height: 20px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+}
+.onmap-yes { background: #dcfce7; color: #15803d; }
+.onmap-no  { background: #fee2e2; color: #b91c1c; }
+
 /* ── Попап фильтра колонки ── */
 .col-filter-popover {
   width: 240px;

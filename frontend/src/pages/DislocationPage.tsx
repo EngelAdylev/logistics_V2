@@ -51,6 +51,14 @@ export default function DislocationPage() {
     refetchInterval: 60_000,
   });
 
+  // Точный набор вагонов, реально попадающих на карту (тот же источник, что и карта)
+  const { data: mapData } = useQuery({
+    queryKey: ['wagons-map-ids'],
+    queryFn: wagonsApi.getForMap,
+    refetchInterval: 60_000,
+  });
+  const onMapIds = useMemo(() => new Set((mapData ?? []).map(w => w.id)), [mapData]);
+
   const wagons = useMemo(() => data?.content ?? [], [data]);
 
   const counts = useMemo(() => {
@@ -167,6 +175,7 @@ export default function DislocationPage() {
           onToggleOne={toggleOne}
           onSetMany={setMany}
           onOpenComments={setCommentWagon}
+          onMapIds={onMapIds}
         />
       </Box>
 

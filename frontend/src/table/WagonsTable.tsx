@@ -32,6 +32,7 @@ interface Props {
   onToggleOne: (id: string) => void;
   onSetMany: (ids: string[], value: boolean) => void;
   onOpenComments: (w: WagonDto) => void;
+  onMapIds: Set<string>;
 }
 
 function StatusDot({ variant }: { variant: WagonVariant }) {
@@ -45,6 +46,7 @@ export default function WagonsTable(props: Props) {
   const {
     data, columnFilters, onFilterChange, onResetFilters,
     visibleIds, onVisibilityChange, selected, onToggleOne, onSetMany, onOpenComments,
+    onMapIds,
   } = props;
 
   const [sortDir, setSortDir] = useState<SortDir>('desc');
@@ -95,6 +97,15 @@ export default function WagonsTable(props: Props) {
   const colSpan = visibleCols.length + 3; // select + dot + comment
 
   const renderCell = (w: WagonDto, colId: string) => {
+    if (colId === 'onMap') {
+      const on = onMapIds.has(w.id);
+      return (
+        <span className={`onmap-badge ${on ? 'onmap-yes' : 'onmap-no'}`}
+          title={on ? 'Отображается на карте' : 'Нет на карте'}>
+          {on ? '✓' : '✕'}
+        </span>
+      );
+    }
     const col = colById.get(colId)!;
     if (col.key === 'lastSeenAt') return formatDateTime(w.lastSeenAt);
     const t = cellText(w, col);

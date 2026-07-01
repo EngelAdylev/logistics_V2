@@ -68,8 +68,10 @@ public class DislocationRecord {
     @Column(name = "number_railway_carriage_on_train")
     private String wagonPosition;
 
-    @Column(name = "remaining_mileage")
-    private Integer remainingMileage;
+    // ВАЖНО: остаток пути до станции назначения — это колонка remaining_distance,
+    // а НЕ remaining_mileage (последняя — учётный пробег, значения до сотен тысяч).
+    @Column(name = "remaining_distance")
+    private Integer remainingDistance;
 
     @Column(name = "distance_traveled")
     private Integer distanceTraveled;

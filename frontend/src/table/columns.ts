@@ -16,6 +16,7 @@ export const COLUMNS: ColumnDef[] = [
   { id: 'currentTrainNumber',      label: '№ поезда',          key: 'currentTrainNumber',      filterable: true,  required: false, defaultVisible: true,  width: 96 },
   { id: 'currentTrainIndex',       label: 'Индекс',            key: 'currentTrainIndex',       filterable: true,  required: false, defaultVisible: true,  width: 130 },
   { id: 'wagonNumber',             label: 'Вагон',             key: 'wagonNumber',             filterable: true,  required: true,  defaultVisible: true,  width: 110 },
+  { id: 'onMap',                   label: 'На карте',          key: null,                      filterable: false, required: false, defaultVisible: true,  align: 'center', width: 80 },
   { id: 'stationName',             label: 'Станция операции',  key: 'stationName',             filterable: true,  required: false, defaultVisible: true,  width: 180 },
   { id: 'operationName',           label: 'Операция',          key: 'operationName',           filterable: true,  required: false, defaultVisible: true,  width: 220 },
   { id: 'lastSeenAt',              label: 'Время операции',    key: 'lastSeenAt',              filterable: false, required: false, defaultVisible: true,  width: 150 },

@@ -115,7 +115,7 @@ public class DislocationProcessingService {
         p.setTrainNumber(r.getTrainNumber());
         p.setTrainIndex(r.getTrainIndex());
         p.setWagonPosition(r.getWagonPositionInt());
-        p.setRemainingDistance(r.getRemainingMileage());
+        p.setRemainingDistance(r.getRemainingDistance());
         p.setDistanceTraveled(r.getDistanceTraveled());
         p.setTotalDistance(r.getTotalDistance());
         p.setGngCode(r.getGngCode());
