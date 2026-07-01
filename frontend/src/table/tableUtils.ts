@@ -32,10 +32,12 @@ export const VARIANT_LABEL: Record<WagonVariant, string> = {
 
 /** Отбор по субфильтру направления. */
 export function matchesDirection(w: WagonDto, dir: Direction): boolean {
+  const active = w.activeTripId != null;
   switch (dir) {
-    case 'delivery': return w.destinationStationCode === OUR_STATION;
-    case 'dispatch': return w.flightStartStationCode === OUR_STATION;
-    case 'archive':  return w.activeTripId == null;
+    // Поставка/Отправка — только активные рейсы; завершённые уходят в «Архивные»
+    case 'delivery': return active && w.destinationStationCode === OUR_STATION;
+    case 'dispatch': return active && w.flightStartStationCode === OUR_STATION;
+    case 'archive':  return !active;
     case 'all':      return true;
     default:         return true;
   }
