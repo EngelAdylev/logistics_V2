@@ -5,11 +5,12 @@ import MapPage from './pages/MapPage';
 import TrainsPage from './pages/TrainsPage';
 import TrainDetailPage from './pages/TrainDetailPage';
 import DislocationPage from './pages/DislocationPage';
+import LoginPage from './pages/LoginPage';
 
 export default function App() {
   return (
     <Routes>
-      <Route path="/login" element={<Navigate to="/dislocation" replace />} />
+      <Route path="/login" element={<LoginPage />} />
 
       <Route element={<ProtectedRoute />}>
         <Route element={<Layout />}>

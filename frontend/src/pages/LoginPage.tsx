@@ -19,7 +19,7 @@ export default function LoginPage() {
     try {
       const auth = await authApi.login(username, password);
       login(auth);
-      navigate('/trains', { replace: true });
+      navigate('/dislocation', { replace: true });
     } catch {
       setError('Неверный логин или пароль');
     } finally {

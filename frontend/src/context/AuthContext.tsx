@@ -15,8 +15,6 @@ function getStoredAuth(): AuthResponse | null {
   }
 }
 
-const GUEST_AUTH: AuthResponse = { token: '', username: 'guest', role: 'ADMIN' };
-
 interface AuthContextValue {
   auth: AuthResponse | null;
   login: (auth: AuthResponse) => void;
@@ -26,7 +24,7 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [auth, setAuth] = useState<AuthResponse | null>(() => getStoredAuth() ?? GUEST_AUTH);
+  const [auth, setAuth] = useState<AuthResponse | null>(() => getStoredAuth());
 
   const login = useCallback((a: AuthResponse) => {
     localStorage.setItem('auth', JSON.stringify(a));
@@ -37,7 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(() => {
     localStorage.removeItem('auth');
     localStorage.removeItem('access_token');
-    setAuth(GUEST_AUTH);
+    setAuth(null);
   }, []);
 
   return (

@@ -27,6 +27,12 @@ springdoc:
 webhook:
   secret: ${WEBHOOK_SECRET:}
 
+# Авто-архивация вагонов без операций дольше порога
+archive:
+  stale-days: ${ARCHIVE_STALE_DAYS:30}
+  interval-ms: ${ARCHIVE_INTERVAL_MS:21600000}   # частота проверки (6 часов)
+  initial-delay-ms: ${ARCHIVE_INITIAL_DELAY_MS:120000}
+
 jwt:
   secret: ${JWT_SECRET:disabled_auth_placeholder_secret_32ch}
 
