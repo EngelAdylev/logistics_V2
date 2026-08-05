@@ -73,6 +73,10 @@ public class DislocationRecord {
     @Column(name = "remaining_distance")
     private Integer remainingDistance;
 
+    // Остаток пробега (до планового ремонта) — отдельная метрика, крупные значения
+    @Column(name = "remaining_mileage")
+    private Integer remainingMileage;
+
     @Column(name = "distance_traveled")
     private Integer distanceTraveled;
 

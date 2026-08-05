@@ -135,6 +135,7 @@ public class WagonService {
                 .currentTrainIndex(w.getCurrentTrainIndex())
                 .wagonPosition(w.getWagonPosition())
                 .remainingDistance(w.getRemainingDistance())
+                .remainingMileage(w.getRemainingMileage())
                 .distanceTraveled(w.getDistanceTraveled())
                 .totalDistance(w.getTotalDistance())
                 .operationCode(w.getOperationCode())

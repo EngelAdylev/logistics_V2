@@ -5,7 +5,11 @@ export const OUR_STATION = '648400';
 export const EMPTY_TRAIN_LABEL = 'Без поезда';
 export const EMPTY_DISTANCE_LABEL = 'Нет данных';
 
-export type Direction = 'delivery' | 'dispatch' | 'archive' | 'all';
+export type Direction = 'delivery' | 'dispatch' | 'lkds' | 'archive' | 'all';
+
+// Операции, означающие, что вагон физически у нас на терминале (Круглое Поле):
+// 20 — выгрузка на местах общ. пользования, 80 — подача вагона на ПП
+export const LKDS_OPS = new Set(['20', '80']);
 export type WagonVariant = 'arrived' | 'incoming' | 'other';
 
 /** Цветовой статус вагона (как на карте/поездах). */
@@ -33,21 +37,44 @@ export const VARIANT_LABEL: Record<WagonVariant, string> = {
 /** Отбор по субфильтру направления. */
 export function matchesDirection(w: WagonDto, dir: Direction): boolean {
   const active = w.activeTripId != null;
+  const atLkds = w.operationCode != null && LKDS_OPS.has(w.operationCode);
   switch (dir) {
-    // Поставка/Отправка — только активные рейсы; завершённые уходят в «Архивные»
-    case 'delivery': return active && w.destinationStationCode === OUR_STATION;
+    // Поставка/Отправка — только активные рейсы; завершённые уходят в «Архивные».
+    // Прибывшие на терминал (ЛКДС) исключаем из «Поставки», чтобы не дублировались.
+    case 'delivery': return active && !atLkds && w.destinationStationCode === OUR_STATION;
     case 'dispatch': return active && w.flightStartStationCode === OUR_STATION;
+    case 'lkds':     return active && atLkds;
     case 'archive':  return !active;
     case 'all':      return true;
     default:         return true;
   }
 }
 
+/** Форматирует сырой индекс поезда РЖД (6+3+6) → 4-3-4, напр. 230600021648400 → 2306-021-6484 */
+export function formatTrainIndex(raw: string | null): string {
+  if (!raw) return '';
+  const s = raw.trim();
+  if (/^\d{15}$/.test(s)) return `${s.slice(0, 4)}-${s.slice(6, 9)}-${s.slice(9, 13)}`;
+  return s;
+}
+
+/** Груж/порож — эвристика по контейнерам и весу груза. */
+export function loadedState(w: WagonDto): string {
+  if ((w.numberLoadedContainers ?? 0) > 0) return 'Груж';
+  if ((w.cargoWeight ?? 0) > 0) return 'Груж';
+  if ((w.numberEmptyContainers ?? 0) > 0) return 'Пор';
+  return '';
+}
+
 /** Строковое представление ячейки для отображения. */
 export function cellText(w: WagonDto, col: ColumnDef): string {
-  if (col.key === 'containerNumbers') {
-    const arr = w.containerNumbers;
-    return arr && arr.length ? arr.join(', ') : '';
+  switch (col.id) {
+    case 'loadState':         return loadedState(w);
+    case 'currentTrainIndex': return formatTrainIndex(w.currentTrainIndex);
+    case 'containerNumbers': {
+      const arr = w.containerNumbers;
+      return arr && arr.length ? arr.join(', ') : '';
+    }
   }
   if (!col.key) return '';
   const v = w[col.key];

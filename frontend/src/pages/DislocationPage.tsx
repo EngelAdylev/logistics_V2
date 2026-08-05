@@ -4,7 +4,9 @@ import {
   Dialog, DialogTitle, DialogContent, DialogActions, Button, Chip,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear';
 import ChatIcon from '@mui/icons-material/Chat';
+import { IconButton } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { wagonsApi, type WagonDto } from '../api/wagons';
 import { commentsApi } from '../api/comments';
@@ -19,6 +21,7 @@ import {
 const DIRECTIONS: { id: Direction; label: string }[] = [
   { id: 'delivery', label: 'Поставка' },
   { id: 'dispatch', label: 'Отправка' },
+  { id: 'lkds', label: 'ЛКДС' },
   { id: 'archive', label: 'Архивные' },
   { id: 'all', label: 'Все' },
 ];
@@ -143,9 +146,18 @@ export default function DislocationPage() {
           size="small" placeholder="Поиск по номеру вагона…"
           value={search} onChange={e => setSearch(e.target.value)}
           sx={{ minWidth: 240 }}
-          InputProps={{ startAdornment: (
-            <InputAdornment position="start"><SearchIcon sx={{ fontSize: 18 }} /></InputAdornment>
-          ) }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start"><SearchIcon sx={{ fontSize: 18 }} /></InputAdornment>
+            ),
+            endAdornment: search ? (
+              <InputAdornment position="end">
+                <IconButton size="small" edge="end" onClick={() => setSearch('')} aria-label="Очистить">
+                  <ClearIcon sx={{ fontSize: 16 }} />
+                </IconButton>
+              </InputAdornment>
+            ) : null,
+          }}
         />
 
         <Box sx={{ flex: 1 }} />

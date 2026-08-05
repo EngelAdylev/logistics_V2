@@ -62,6 +62,9 @@ public class DislocationWebhookPayload {
     @JsonProperty("remaining_distance")
     private Integer remainingDistance;
 
+    @JsonProperty("remaining_mileage")
+    private Integer remainingMileage;
+
     @JsonProperty("distance_traveled")
     private Integer distanceTraveled;
 

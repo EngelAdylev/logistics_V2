@@ -19,6 +19,7 @@ public class WagonDto {
     private String currentTrainIndex;
     private Integer wagonPosition;
     private Integer remainingDistance;
+    private Integer remainingMileage;
     private Integer distanceTraveled;
     private Integer totalDistance;
     private String operationCode;

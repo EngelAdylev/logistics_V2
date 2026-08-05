@@ -25,6 +25,7 @@ export interface WagonDto {
   currentTrainIndex: string | null;
   wagonPosition: number | null;
   remainingDistance: number | null;
+  remainingMileage: number | null;
   distanceTraveled: number | null;
   totalDistance: number | null;
   operationCode: string | null;

@@ -50,6 +50,7 @@ public class Wagon extends AbstractBaseEntity {
     private Integer wagonPosition;
     private Integer distanceTraveled;
     private Integer totalDistance;
+    private Integer remainingMileage;
     private String gngCode;
     private Integer numberLoadedContainers;
     private Integer numberEmptyContainers;

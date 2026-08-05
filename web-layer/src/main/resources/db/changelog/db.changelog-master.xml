@@ -19,4 +19,6 @@
              relativeToChangelogFile="false"/>
     <include file="classpath:db/changelog/V7__sync_cursor.sql"
              relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/V8__wagon_remaining_mileage.sql"
+             relativeToChangelogFile="false"/>
 </databaseChangeLog>
