@@ -60,12 +60,10 @@ export function formatTrainIndex(raw: string | null): string {
   return s;
 }
 
-/** Груж/порож — эвристика по контейнерам и весу груза. */
+/** Груж/порож — бинарный признак: есть груз (гружёные КТК или вес) → «Груж», иначе «Пор». */
 export function loadedState(w: WagonDto): string {
-  if ((w.numberLoadedContainers ?? 0) > 0) return 'Груж';
-  if ((w.cargoWeight ?? 0) > 0) return 'Груж';
-  if ((w.numberEmptyContainers ?? 0) > 0) return 'Пор';
-  return '';
+  const loaded = (w.numberLoadedContainers ?? 0) > 0 || (w.cargoWeight ?? 0) > 0;
+  return loaded ? 'Груж' : 'Пор';
 }
 
 /** Строковое представление ячейки для отображения. */
