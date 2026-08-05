@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   Box, Typography, CircularProgress, Alert, TextField, InputAdornment,
   Dialog, DialogTitle, DialogContent, DialogActions, Button, Chip,
@@ -34,8 +35,20 @@ function loadVisible(): string[] {
 }
 
 export default function DislocationPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [direction, setDirection] = useState<Direction>('delivery');
   const [search, setSearch] = useState('');
+
+  // Переход с карты: /dislocation?wagon=NUMBER → показываем этот вагон
+  useEffect(() => {
+    const w = searchParams.get('wagon');
+    if (w) {
+      setSearch(w);
+      setDirection('all');
+      searchParams.delete('wagon');
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
   const [columnFilters, setColumnFilters] = useState<ColumnFilters>({});
   const [visibleIds, setVisibleIds] = useState<string[]>(loadVisible);
   const [selected, setSelected] = useState<Set<string>>(new Set());
