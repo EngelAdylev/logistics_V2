@@ -37,7 +37,9 @@ export const VARIANT_LABEL: Record<WagonVariant, string> = {
 /** Отбор по субфильтру направления. */
 export function matchesDirection(w: WagonDto, dir: Direction): boolean {
   const active = w.activeTripId != null;
-  const atLkds = w.operationCode != null && LKDS_OPS.has(w.operationCode);
+  // ЛКДС — только если операция (20 выгрузка / 80 подача на ПП) произошла на Круглом Поле
+  const atLkds = w.operationCode != null && LKDS_OPS.has(w.operationCode)
+    && w.stationCode === OUR_STATION;
   switch (dir) {
     // Поставка/Отправка — только активные рейсы; завершённые уходят в «Архивные».
     // Прибывшие на терминал (ЛКДС) исключаем из «Поставки», чтобы не дублировались.
