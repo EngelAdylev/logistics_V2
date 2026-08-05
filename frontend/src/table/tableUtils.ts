@@ -116,13 +116,32 @@ export function applyColumnFilters(
   );
 }
 
-/** Поиск по номеру вагона (мультитокен через пробел/запятую). */
+/** Строка со всеми искомыми полями вагона (для глобального поиска). */
+function searchBlob(w: WagonDto): string {
+  const parts: (string | number | null | undefined)[] = [
+    w.wagonNumber, w.currentTrainNumber, w.currentTrainIndex, formatTrainIndex(w.currentTrainIndex),
+    w.stationName, w.stationCode, w.operationName, w.operationCode,
+    w.waybillNumber, w.sendingNumber,
+    w.destinationStationName, w.destinationStationCode,
+    w.flightStartStationName, w.flightStartStationCode,
+    w.wagonType, w.gngCode, w.shipperOkpo, w.consigneeOkpo,
+    w.remainingDistance, w.remainingMileage, w.cargoWeight,
+    ...(w.containerNumbers ?? []),
+  ];
+  return parts.filter(x => x != null && x !== '').join(' ').toLowerCase();
+}
+
+/**
+ * Глобальный поиск по всем полям, мультитокен (пробел / запятая / перенос строки).
+ * Строка попадает в результат, если содержит ЛЮБОЙ из введённых токенов —
+ * удобно вставлять список номеров КТК/вагонов и сразу видеть все совпадения.
+ */
 export function applyWagonSearch(rows: WagonDto[], search: string): WagonDto[] {
   const tokens = search.toLowerCase().split(/[\s,;]+/).map(s => s.trim()).filter(Boolean);
   if (!tokens.length) return rows;
   return rows.filter(w => {
-    const n = (w.wagonNumber || '').toLowerCase();
-    return tokens.some(t => n.includes(t));
+    const blob = searchBlob(w);
+    return tokens.some(t => blob.includes(t));
   });
 }
 

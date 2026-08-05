@@ -139,9 +139,9 @@ export default function DislocationPage() {
         </div>
 
         <TextField
-          size="small" placeholder="Поиск по номеру вагона…"
+          size="small" placeholder="Поиск по всем полям — вставь список КТК/вагонов…"
           value={search} onChange={e => setSearch(e.target.value)}
-          sx={{ minWidth: 240 }}
+          sx={{ minWidth: 320 }}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start"><SearchIcon sx={{ fontSize: 18 }} /></InputAdornment>
