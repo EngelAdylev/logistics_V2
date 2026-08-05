@@ -34,4 +34,8 @@ export const COLUMNS: ColumnDef[] = [
 ];
 
 export const DEFAULT_VISIBLE_IDS = COLUMNS.filter(c => c.defaultVisible).map(c => c.id);
+export const DEFAULT_ORDER = COLUMNS.map(c => c.id);
 export const STORAGE_KEY_COLUMNS = 'dislocation_visible_columns';
+export const STORAGE_KEY_ORDER = 'dislocation_column_order';
+export const STORAGE_KEY_GROUP = 'dislocation_group_cols';
+export const STORAGE_KEY_SORT = 'dislocation_sort';

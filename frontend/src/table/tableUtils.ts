@@ -163,6 +163,45 @@ export function groupByDistance(rows: WagonDto[]): Map<string, WagonDto[]> {
   );
 }
 
+// ── Многоуровневая группировка (как перетаскивание заголовка в АСУ ТК) ──
+export interface GroupNode {
+  colId: string;
+  value: string;              // значение группировки (для показа)
+  count: number;
+  path: string;              // уникальный путь для состояния свёрнутости
+  children?: GroupNode[];     // подгруппы (если не последний уровень)
+  rows?: WagonDto[];          // листовые строки (на последнем уровне)
+}
+
+export function buildGroups(
+  rows: WagonDto[],
+  groupCols: string[],
+  colById: Map<string, ColumnDef>,
+  level = 0,
+  parentPath = '',
+): GroupNode[] {
+  const colId = groupCols[level];
+  const col = colById.get(colId);
+  const map = new Map<string, WagonDto[]>();
+  for (const r of rows) {
+    const v = (col ? cellText(r, col).trim() : '') || '—';
+    if (!map.has(v)) map.set(v, []);
+    map.get(v)!.push(r);
+  }
+  const isLast = level === groupCols.length - 1;
+  return [...map.keys()]
+    .sort((a, b) => a.localeCompare(b, 'ru', { numeric: true }))
+    .map(value => {
+      const sub = map.get(value)!;
+      const path = `${parentPath}/${colId}=${value}`;
+      return {
+        colId, value, count: sub.length, path,
+        children: isLast ? undefined : buildGroups(sub, groupCols, colById, level + 1, path),
+        rows: isLast ? sub : undefined,
+      } as GroupNode;
+    });
+}
+
 export function formatDateTime(v: string | null): string {
   if (!v) return '—';
   const d = new Date(v);

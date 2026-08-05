@@ -69,6 +69,58 @@ body {
   overflow: hidden;
 }
 
+/* ── Панель группировки (drag заголовка сюда) ── */
+.group-panel {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 40px;
+  padding: 6px 12px;
+  border-bottom: 1px dashed var(--border-strong);
+  background: #f8fafc;
+}
+.group-panel.drop-active {
+  background: var(--accent-soft);
+  border-bottom-color: var(--accent);
+}
+.group-panel-hint { color: #94a3b8; font-size: 12.5px; font-style: italic; }
+.group-panel-label { color: var(--text-muted); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
+.group-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 4px 3px 10px;
+  border-radius: 7px;
+}
+.group-chip-x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 1px;
+}
+.group-chip-x:hover { background: rgba(255, 255, 255, 0.45); }
+.group-col-label { color: var(--text-muted); font-weight: 600; margin-right: 4px; }
+
+.th-grip {
+  display: inline-flex;
+  align-items: center;
+  color: #cbd5e1;
+  cursor: grab;
+  border-radius: 4px;
+}
+.th-grip:hover { color: var(--accent); background: #e9eef5; }
+.th-grip:active { cursor: grabbing; }
+
 /* ── Тулбар ── */
 .table-toolbar {
   display: flex;
