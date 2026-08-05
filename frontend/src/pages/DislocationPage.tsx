@@ -10,7 +10,6 @@ import { IconButton } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { wagonsApi, type WagonDto } from '../api/wagons';
 import { commentsApi } from '../api/comments';
-import { useAuth } from '../context/AuthContext';
 import WagonsTable from '../table/WagonsTable';
 import CommentsDrawer from '../components/CommentsDrawer';
 import { DEFAULT_VISIBLE_IDS, STORAGE_KEY_COLUMNS } from '../table/columns';
@@ -35,7 +34,6 @@ function loadVisible(): string[] {
 }
 
 export default function DislocationPage() {
-  const { auth } = useAuth();
   const [direction, setDirection] = useState<Direction>('delivery');
   const [search, setSearch] = useState('');
   const [columnFilters, setColumnFilters] = useState<ColumnFilters>({});
@@ -101,19 +99,17 @@ export default function DislocationPage() {
   );
 
   const applyBulk = async () => {
-    const targets = selectedWagons.filter(w => w.activeTripId);
-    const skipped = selectedWagons.length - targets.length;
     setBulkBusy(true);
     setBulkResult(null);
     let ok = 0;
-    for (const w of targets) {
+    for (const w of selectedWagons) {
       try {
-        await commentsApi.add(w.activeTripId!, { author: auth?.username || 'guest', body: bulkText.trim() });
+        await commentsApi.add(w.id, { body: bulkText.trim() });
         ok++;
       } catch { /* skip failures */ }
     }
     setBulkBusy(false);
-    setBulkResult(`Добавлено: ${ok}${skipped ? ` · пропущено (нет активного рейса): ${skipped}` : ''}`);
+    setBulkResult(`Добавлено: ${ok} из ${selectedWagons.length}`);
     setBulkText('');
   };
 
@@ -197,8 +193,7 @@ export default function DislocationPage() {
         <DialogTitle>Комментарий к {selected.size} вагон(ам)</DialogTitle>
         <DialogContent>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
-            Комментарий добавится к активному рейсу каждого выбранного вагона. Вагоны без
-            активного рейса будут пропущены.
+            Комментарий добавится в историю каждого выбранного вагона от вашего имени.
           </Typography>
           <TextField
             fullWidth multiline minRows={3} autoFocus

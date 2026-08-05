@@ -1,6 +1,6 @@
 import apiClient from './client';
 
-export interface TripCommentDto {
+export interface WagonCommentDto {
   id: string;
   author: string;
   body: string;
@@ -8,14 +8,13 @@ export interface TripCommentDto {
 }
 
 export interface AddCommentRequest {
-  author: string;
   body: string;
 }
 
 export const commentsApi = {
-  list: (tripId: string) =>
-    apiClient.get<TripCommentDto[]>(`/trips/${tripId}/comments`).then(r => r.data),
+  list: (wagonId: string) =>
+    apiClient.get<WagonCommentDto[]>(`/wagons/${wagonId}/comments`).then(r => r.data),
 
-  add: (tripId: string, req: AddCommentRequest) =>
-    apiClient.post<TripCommentDto>(`/trips/${tripId}/comments`, req).then(r => r.data),
+  add: (wagonId: string, req: AddCommentRequest) =>
+    apiClient.post<WagonCommentDto>(`/wagons/${wagonId}/comments`, req).then(r => r.data),
 };

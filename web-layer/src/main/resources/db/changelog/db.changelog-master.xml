@@ -21,4 +21,6 @@
              relativeToChangelogFile="false"/>
     <include file="classpath:db/changelog/V8__wagon_remaining_mileage.sql"
              relativeToChangelogFile="false"/>
+    <include file="classpath:db/changelog/V9__wagon_comment.sql"
+             relativeToChangelogFile="false"/>
 </databaseChangeLog>

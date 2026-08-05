@@ -115,7 +115,7 @@ interface Props {
 }
 
 export default function WagonTable({ trainNumber, trainIndex }: Props) {
-  const [selectedTripId, setSelectedTripId] = useState<string | null>(null);
+  const [selectedWagonId, setSelectedWagonId] = useState<string | null>(null);
   const [colVisibility, setColVisibility] = useState(DEFAULT_VISIBLE);
 
   const { data: wagons = [], isLoading } = useQuery({
@@ -127,18 +127,18 @@ export default function WagonTable({ trainNumber, trainIndex }: Props) {
     ...STATIC_COLUMNS,
     {
       field: '_comments', headerName: 'Комм.', width: 70, sortable: false, filterable: false,
-      renderCell: ({ row }) => row.activeTripId ? (
+      renderCell: ({ row }) => (
         <Tooltip title="Комментарии">
           <IconButton
             size="small"
             onClick={e => {
               e.stopPropagation();
-              setSelectedTripId(prev => prev === row.activeTripId ? null : row.activeTripId);
+              setSelectedWagonId(prev => prev === row.id ? null : row.id);
             }}>
             <CommentIcon fontSize="small" />
           </IconButton>
         </Tooltip>
-      ) : null,
+      ),
     },
   ], []);
 
@@ -170,9 +170,7 @@ export default function WagonTable({ trainNumber, trainIndex }: Props) {
         disableRowSelectionOnClick
         onRowClick={({ row }) => {
           const wagon = row as WagonDto;
-          if (wagon.activeTripId) {
-            setSelectedTripId(prev => prev === wagon.activeTripId ? null : wagon.activeTripId);
-          }
+          setSelectedWagonId(prev => prev === wagon.id ? null : wagon.id);
         }}
         slots={{ toolbar: CustomToolbar }}
         sx={{
@@ -186,11 +184,11 @@ export default function WagonTable({ trainNumber, trainIndex }: Props) {
         density="compact"
       />
 
-      <Collapse in={!!selectedTripId}>
-        {selectedTripId && (
+      <Collapse in={!!selectedWagonId}>
+        {selectedWagonId && (
           <>
             <Divider />
-            <CommentsPanel tripId={selectedTripId} onClose={() => setSelectedTripId(null)} />
+            <CommentsPanel wagonId={selectedWagonId} onClose={() => setSelectedWagonId(null)} />
           </>
         )}
       </Collapse>

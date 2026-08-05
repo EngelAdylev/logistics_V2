@@ -11,29 +11,28 @@ const fmtDate = (v: string) =>
   new Date(v).toLocaleString('ru', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' });
 
 interface Props {
-  tripId: string;
+  wagonId: string;
   onClose: () => void;
 }
 
-export default function CommentsPanel({ tripId, onClose }: Props) {
+export default function CommentsPanel({ wagonId, onClose }: Props) {
   const queryClient = useQueryClient();
-  const [author, setAuthor] = useState('');
   const [body, setBody] = useState('');
 
   const { data: comments = [], isLoading } = useQuery({
-    queryKey: ['comments', tripId],
-    queryFn: () => commentsApi.list(tripId),
+    queryKey: ['comments', wagonId],
+    queryFn: () => commentsApi.list(wagonId),
   });
 
   const addMutation = useMutation({
-    mutationFn: () => commentsApi.add(tripId, { author: author.trim(), body: body.trim() }),
+    mutationFn: () => commentsApi.add(wagonId, { body: body.trim() }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['comments', tripId] });
+      queryClient.invalidateQueries({ queryKey: ['comments', wagonId] });
       setBody('');
     },
   });
 
-  const canSubmit = author.trim().length > 0 && body.trim().length > 0 && !addMutation.isPending;
+  const canSubmit = body.trim().length > 0 && !addMutation.isPending;
 
   return (
     <Box sx={{ p: 2, bgcolor: 'grey.50' }}>
@@ -71,14 +70,6 @@ export default function CommentsPanel({ tripId, onClose }: Props) {
       <Divider sx={{ mb: 1.5 }} />
 
       <Stack spacing={1}>
-        <TextField
-          size="small"
-          label="Автор"
-          value={author}
-          onChange={e => setAuthor(e.target.value)}
-          inputProps={{ maxLength: 100 }}
-          sx={{ maxWidth: 260 }}
-        />
         <TextField
           size="small"
           label="Комментарий"

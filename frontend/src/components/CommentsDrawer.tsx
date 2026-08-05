@@ -4,8 +4,7 @@ import {
   CircularProgress, Divider,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { commentsApi, type TripCommentDto } from '../api/comments';
-import { useAuth } from '../context/AuthContext';
+import { commentsApi, type WagonCommentDto } from '../api/comments';
 import type { WagonDto } from '../api/wagons';
 import { formatDateTime } from '../table/tableUtils';
 
@@ -15,31 +14,28 @@ interface Props {
 }
 
 export default function CommentsDrawer({ wagon, onClose }: Props) {
-  const { auth } = useAuth();
-  const [comments, setComments] = useState<TripCommentDto[]>([]);
+  const [comments, setComments] = useState<WagonCommentDto[]>([]);
   const [loading, setLoading] = useState(false);
   const [body, setBody] = useState('');
   const [saving, setSaving] = useState(false);
 
-  const tripId = wagon?.activeTripId ?? null;
+  const wagonId = wagon?.id ?? null;
 
   useEffect(() => {
-    if (!wagon || !tripId) { setComments([]); return; }
+    if (!wagonId) { setComments([]); return; }
     setLoading(true);
-    commentsApi.list(tripId)
+    setBody('');
+    commentsApi.list(wagonId)
       .then(setComments)
       .catch(() => setComments([]))
       .finally(() => setLoading(false));
-  }, [wagon, tripId]);
+  }, [wagonId]);
 
   const submit = async () => {
-    if (!tripId || !body.trim()) return;
+    if (!wagonId || !body.trim()) return;
     setSaving(true);
     try {
-      const created = await commentsApi.add(tripId, {
-        author: auth?.username || 'guest',
-        body: body.trim(),
-      });
+      const created = await commentsApi.add(wagonId, { body: body.trim() });
       setComments(prev => [...prev, created]);
       setBody('');
     } finally {
@@ -49,7 +45,7 @@ export default function CommentsDrawer({ wagon, onClose }: Props) {
 
   return (
     <Drawer anchor="right" open={!!wagon} onClose={onClose}
-      PaperProps={{ sx: { width: 380, maxWidth: '90vw' } }}>
+      PaperProps={{ sx: { width: 400, maxWidth: '92vw' } }}>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', px: 2, py: 1.5 }}>
         <Box>
           <Typography variant="subtitle1" fontWeight={700}>Комментарии</Typography>
@@ -63,18 +59,14 @@ export default function CommentsDrawer({ wagon, onClose }: Props) {
       <Divider />
 
       <Box sx={{ flex: 1, overflowY: 'auto', p: 2 }}>
-        {!tripId ? (
-          <Typography variant="body2" color="text.secondary">
-            У вагона нет активного рейса — комментарии недоступны.
-          </Typography>
-        ) : loading ? (
+        {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', pt: 4 }}><CircularProgress size={22} /></Box>
         ) : comments.length === 0 ? (
           <Typography variant="body2" color="text.secondary">Пока нет комментариев.</Typography>
         ) : (
           comments.map(c => (
             <Box key={c.id} sx={{ mb: 1.5, p: 1.25, bgcolor: '#f6f7f9', borderRadius: 1.5 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5, gap: 1 }}>
                 <Typography variant="caption" fontWeight={700}>{c.author}</Typography>
                 <Typography variant="caption" color="text.secondary">{formatDateTime(c.createdAt)}</Typography>
               </Box>
@@ -84,26 +76,23 @@ export default function CommentsDrawer({ wagon, onClose }: Props) {
         )}
       </Box>
 
-      {tripId && (
-        <>
-          <Divider />
-          <Box sx={{ p: 2 }}>
-            <TextField
-              fullWidth multiline minRows={2} maxRows={5} size="small"
-              placeholder="Новый комментарий…"
-              value={body}
-              onChange={e => setBody(e.target.value)}
-            />
-            <Button
-              fullWidth variant="contained" sx={{ mt: 1 }}
-              disabled={!body.trim() || saving}
-              onClick={submit}
-            >
-              {saving ? 'Отправка…' : 'Добавить'}
-            </Button>
-          </Box>
-        </>
-      )}
+      <Divider />
+      <Box sx={{ p: 2 }}>
+        <TextField
+          fullWidth multiline minRows={2} maxRows={5} size="small"
+          placeholder="Новый комментарий…"
+          value={body}
+          onChange={e => setBody(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) submit(); }}
+        />
+        <Button
+          fullWidth variant="contained" sx={{ mt: 1 }}
+          disabled={!body.trim() || saving}
+          onClick={submit}
+        >
+          {saving ? 'Отправка…' : 'Добавить'}
+        </Button>
+      </Box>
     </Drawer>
   );
 }
