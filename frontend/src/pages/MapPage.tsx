@@ -113,9 +113,9 @@ export default function MapPage() {
         <MapContainer center={[56.0, 54.0]} zoom={5} attributionControl={false}
           style={{ height: '100%', width: '100%' }}>
           <TileLayer
-            attribution='© OpenStreetMap © CARTO'
-            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-            subdomains="abcd" maxZoom={19} />
+            attribution='© OpenStreetMap'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            subdomains="abc" maxZoom={19} />
           {stations.map(station => {
             const radius = Math.min(5 + Math.floor(Math.sqrt(station.wagons.length) * 1.5), 18);
             return (
